@@ -1,29 +1,19 @@
-import axios from "axios";
 import React, { useState } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { createPost } from "../actions/postActions";
 
-function PostForm() {
+const PostForm = ({ createPost }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
       title,
       body,
     };
-    console.log(data);
-
-    const res = await axios.post(
-      "https://jsonplaceholder.typicode.com/posts",
-      JSON.stringify(data),
-      {
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-
-    console.log(res.data);
+    createPost(data);
   };
   return (
     <div className="container">
@@ -50,6 +40,10 @@ function PostForm() {
       </form>
     </div>
   );
-}
+};
 
-export default PostForm;
+PostForm.propTypes = {
+  createPost: PropTypes.func.isRequired,
+};
+
+export default connect(null, { createPost })(PostForm);
